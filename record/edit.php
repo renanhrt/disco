@@ -42,14 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cover = $_FILES['cover'];
 
     if ($cover['error'] === UPLOAD_ERR_OK) {
-        $images = '../images/';
+        $images = 'images/';
         $uploadFile = $images . basename($cover['name']);
 
         $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
         if ($extension != "jpg" && $extension != "png" && $extension != "jpeg") {
             $statusMessage = "Only JPG, JPEG, PNG files are allowed.";
         } else {
-            if (move_uploaded_file($cover['tmp_name'], $uploadFile)) {
+            if (move_uploaded_file($cover['tmp_name'], "../" . $uploadFile)) {
                 $verifier = true;
             } else {
                 $statusMessage = "Possible file upload attack!";
