@@ -23,6 +23,8 @@ if ($query && $query->num_rows > 0) {
 <body>
     <div id="rectable">
         <h2>Records</h2>
+        <a href="record/create.php">Add Record</a>
+        <a href="artist/create.php">Add Artist</a>
         <table>
             <thead>
                 <tr>
