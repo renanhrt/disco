@@ -10,6 +10,8 @@ if ($query && $query->num_rows > 0) {
     }
 } 
 
+print_r($records);
+
 
 $query = $conn->query("
     SELECT artists.idArtist, artists.name, COUNT(records.idRecord) record_count

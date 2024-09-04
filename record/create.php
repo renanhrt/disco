@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cover = $_FILES['cover'];
 
     if ($cover['error'] === UPLOAD_ERR_OK) {
-        $images = 'images/';
+        $images = '../images/';
         $uploadFile = $images . basename($cover['name']);
 
         $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
