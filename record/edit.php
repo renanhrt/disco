@@ -66,9 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($query->execute()) {
             $statusMessage = "Record updated successfully";
-            // back to index.php
-
-            
             header("Location: ../index.php");
         } else {
             $statusMessage = "Error: " . $query->error;
