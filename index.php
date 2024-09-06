@@ -54,7 +54,7 @@ if (isset($_GET['delete'])) {
 <body>
     <h2>Records</h2>
 
-    <h2><a href="loan/loans.php">Loans</a></h2>
+    <h2><a href="loan/read.php">Loans</a></h2>
 
     <a href="record/create.php">Add Record</a>
     <table>

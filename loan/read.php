@@ -13,8 +13,16 @@ if ($query && $query->num_rows > 0) {
 
 if (isset($_GET['return'])) {
     $id = $conn->real_escape_string($_GET['return']);
-    $conn->query("UPDATE loans SET status = 'Returned', returnDate = NOW() WHERE idLoan = $id");
-    header('Location: read.php');
+
+    $query = $conn->query("SELECT status FROM loans WHERE idLoan = $id");
+    if ($query && $query->num_rows > 0) {
+        $loan = $query->fetch_assoc();
+    }
+
+    if ($loan['status'] != 'Returned') {
+        $conn->query("UPDATE loans SET status = 'Returned', returnDate = NOW() WHERE idLoan = $id");
+        header('Location: read.php');
+    }
 }
 
 
@@ -60,6 +68,9 @@ if (isset($_GET['return'])) {
             <?php endforeach; ?>
         </tbody>
     </table>
+    <br>
+
+    <a href="../index.php">Back</a>
 
 </body>
 </html>
