@@ -1,6 +1,9 @@
 <?php
 include '../includes/db.php';
 
+$statusMessage = '';
+
+// get selected artist
 if (isset($_GET['id'])) {
     $artistId = $_GET['id'];
     
@@ -10,29 +13,34 @@ if (isset($_GET['id'])) {
     $query->execute();
     $result = $query->get_result();
 
-    if ($result->num_rows > 0) {
-        $artist = $result->fetch_assoc();
-    } else {
-        die("Artist not found.");
-    }
-} else {
-    die("ID not provided.");
+    $artist = $result->fetch_assoc();
 }
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// update artist
+if (isset($_POST['name'])) {
     $name = $_POST['name'];
 
-    $query = $conn->prepare("UPDATE artists SET name = ? WHERE idArtist = ?");
-    $query->bind_param("si", $name, $artistId);
+    $checkQuery = $conn->prepare("SELECT idArtist FROM artists WHERE name = ?");
+    $checkQuery->bind_param("s", $name);
+    $checkQuery->execute();
+    $checkResult = $checkQuery->get_result();
 
-    if ($query->execute()) {
-        header("Location: ../index.php");
+    if ($checkResult->num_rows > 0) {
+        $statusMessage = "Artist already exists";
     } else {
-        echo "Error: " . $query->error;
+        $query = $conn->prepare("UPDATE artists SET name = ? WHERE idArtist = ?");
+        $query->bind_param("si", $name, $artistId);
+
+        if ($query->execute()) {
+            $statusMessage = "Artist updated successfully";
+        } else {
+            $statusMessage = "Error: " . $query->error;
+        }
+
+        $query->close();
     }
 
-    $query->close();
+    $checkQuery->close();
 }
 ?>
 
@@ -51,5 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <input type="submit" value="Submit">
     </form>
+
+    <p><?php echo htmlspecialchars($statusMessage); ?></p>
+
+    <a href="../index.php">Back</a>
 </body>
 </html>

@@ -4,76 +4,78 @@ include '../includes/db.php';
 $statusMessage = '';
 $verifier = false;
 
-
+// get selected record
 if (isset($_GET['id'])) {
     $recordId = $_GET['id'];
     
     $query = $conn->prepare("SELECT * FROM records WHERE idRecord = ?");
-    print_r($conn->error);
     $query->bind_param("i", $recordId);
     $query->execute();
     $result = $query->get_result();
 
-    if ($result->num_rows > 0) {
-        $record = $result->fetch_assoc();
-    } else {
-        die("Record not found.");
-    }
-} else {
-    die("ID not provided.");
+    $record = $result->fetch_assoc();
 }
 
+print_r($record);
 
+// get artists
 $artists = [];
 $query = $conn->query("SELECT idArtist, name FROM artists");
-
 if ($query && $query->num_rows > 0) {
     while ($row = $query->fetch_assoc()) {
         $artists[] = $row;
     }
 }
 
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// update record
+if (isset($_POST['title'])) {
     $title = $_POST['title'];
     $year = $_POST['year'];
     $artistId = $_POST['artist'];
     $cover = $_FILES['cover'];
 
-    if ($cover['error'] === UPLOAD_ERR_OK) {
-        $images = 'images/';
-        $uploadFile = $images . basename($cover['name']);
+    // check if record already exists
+    $checkQuery = $conn->prepare("SELECT * FROM records WHERE title = ? AND idArtist = ? AND year = ?");
+    $checkQuery->bind_param("sii", $title, $artistId, $year);
+    $checkQuery->execute();
+    $result = $checkQuery->get_result();
 
-        $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
-        if ($extension != "jpg" && $extension != "png" && $extension != "jpeg") {
-            $statusMessage = "Only JPG, JPEG, PNG files are allowed.";
-        } else {
-            if (move_uploaded_file($cover['tmp_name'], "../" . $uploadFile)) {
-                $verifier = true;
-            } else {
-                $statusMessage = "Possible file upload attack!";
-            }
-        }
+    if ($result->num_rows > 0) {
+        $statusMessage = "Album already exists";
     } else {
-        // If no new cover is uploaded, keep the old cover
-        $uploadFile = $record['cover'];
-    }
-
-    if (empty($statusMessage)) {
+        // upload cover image
+        if ($cover['error'] === UPLOAD_ERR_OK) {
+            $images = 'images/';
+            $uploadFile = $images . basename($cover['name']);
+    
+            $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
+            if ($extension != "jpg" && $extension != "png" && $extension != "jpeg") {
+                $statusMessage = "Only JPG, JPEG, PNG files are allowed.";
+            } else {
+                if (move_uploaded_file($cover['tmp_name'], "../" . $uploadFile)) {
+                    $verifier = true;
+                } else {
+                    $statusMessage = "Possible file upload attack!";
+                }
+            }
+        } else {
+            $statusMessage = "File upload error: " . $cover['error'];
+        }
+        
         $query = $conn->prepare("UPDATE records SET title = ?, year = ?, idArtist = ?, cover = ? WHERE idRecord = ?");
         $query->bind_param("sissi", $title, $year, $artistId, $uploadFile, $recordId);
 
-        if ($query->execute()) {
-            $statusMessage = "Record updated successfully";
-            header("Location: ../index.php");
-        } else {
-            $statusMessage = "Error: " . $query->error;
-        }
+            if ($query->execute()) {
+                $statusMessage = "Record updated successfully";
+                header("Location: ../index.php");
+            } else {
+                $statusMessage = "Error: " . $query->error;
+            }
 
         $query->close();
     }
 }
+
 ?>
 
 <!DOCTYPE html>

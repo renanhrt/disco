@@ -1,20 +1,36 @@
 <?php
 include '../includes/db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$statusMessage = '';
+
+// create artist
+if (isset($_POST['name'])) {
     $name = $_POST['name'];
 
-    $query = $conn->prepare("INSERT INTO artists (name) VALUES (?)");
-    $query->bind_param("s", $name);
+    // Check if artist already exists
+    $checkQuery = $conn->prepare("SELECT * FROM artists WHERE name = ?");
+    $checkQuery->bind_param("s", $name);
+    $checkQuery->execute();
+    $result = $checkQuery->get_result();
 
-    if ($query->execute()) {
-        echo "New artist created successfully";
+    if ($result->num_rows > 0) {
+        $statusMessage = "Artist already exists";
     } else {
-        echo "Error: " . $query->error;
+        $insertQuery = $conn->prepare("INSERT INTO artists (name) VALUES (?)");
+        $insertQuery->bind_param("s", $name);
+
+        if ($insertQuery->execute()) {
+            $statusMessage = "New artist created successfully";
+        } else {
+            $statusMessage = "Error: " . $insertQuery->error;
+        }
+
+        $insertQuery->close();
     }
 
-    $query->close();
+    $checkQuery->close();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -32,5 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <input type="submit" value="Submit">
     </form>
+
+    <p><?php echo htmlspecialchars($statusMessage); ?></p>
+
+    <a href="../index.php">Back</a>
 </body>
 </html>

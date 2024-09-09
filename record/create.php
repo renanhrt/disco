@@ -4,51 +4,62 @@ include '../includes/db.php';
 $statusMessage = '';
 $verifier = false;
 
+
+// get artists
 $artists = [];
 $query = $conn->query("SELECT idArtist, name FROM artists");
-
 if ($query && $query->num_rows > 0) {
     while ($row = $query->fetch_assoc()) {
         $artists[] = $row;
     }
 } 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// update record
+if (isset($_POST['title'])) {
     $title = $_POST['title'];
     $year = $_POST['year'];
     $artistId = $_POST['artist'];
     $cover = $_FILES['cover'];
 
-    if ($cover['error'] === UPLOAD_ERR_OK) {
-        $images = 'images/';
-        $uploadFile = $images . basename($cover['name']);
-
-        $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
-        if ($extension != "jpg" && $extension != "png" && $extension != "jpeg") {
-            $statusMessage = "Only JPG, JPEG, PNG files are allowed.";
-        } else {
-            if (move_uploaded_file($cover['tmp_name'], "../" . $uploadFile)) {
-                $verifier = true;
-            } else {
-                $statusMessage = "Possible file upload attack!";
-            }
-        }
-    } else {
-        $statusMessage = "File upload error: " . $cover['error'];
-    }
-
     if (empty($statusMessage)) {
         
-        $query = $conn->prepare("INSERT INTO records (title, year, idArtist, cover) VALUES (?, ?, ?, ?)");
-        $query->bind_param("siss", $title, $year, $artistId, $uploadFile);
+        $checkQuery = $conn->prepare("SELECT * FROM records WHERE title = ? AND idArtist = ? AND year = ?");
+        $checkQuery->bind_param("sii", $title, $artistId, $year);
+        $checkQuery->execute();
+        $result = $checkQuery->get_result();
 
-        if ($query->execute()) {
-            $statusMessage = "New album created successfully";
+        if ($result->num_rows > 0) {
+            $statusMessage = "Album already exists";
         } else {
-            $statusMessage = "Error: " . $query->error;
-        }
+            if ($cover['error'] === UPLOAD_ERR_OK) {
+                $images = 'images/';
+                $uploadFile = $images . basename($cover['name']);
+        
+                $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
+                if ($extension != "jpg" && $extension != "png" && $extension != "jpeg") {
+                    $statusMessage = "Only JPG, JPEG, PNG files are allowed.";
+                } else {
+                    if (move_uploaded_file($cover['tmp_name'], "../" . $uploadFile)) {
+                        $verifier = true;
+                    } else {
+                        $statusMessage = "Possible file upload attack!";
+                    }
+                }
+            } else {
+                $statusMessage = "File upload error: " . $cover['error'];
+            }
+            
+            $query = $conn->prepare("INSERT INTO records (title, year, idArtist, cover) VALUES (?, ?, ?, ?)");
+            $query->bind_param("siss", $title, $year, $artistId, $uploadFile);
 
-        $query->close();
+            if ($query->execute()) {
+                $statusMessage = "New album created successfully";
+            } else {
+                $statusMessage = "Error: " . $query->error;
+            }
+
+            $query->close();
+        }
     }
 }
 ?>

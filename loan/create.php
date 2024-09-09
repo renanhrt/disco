@@ -1,6 +1,7 @@
 <?php
 include '../includes/db.php';
 
+// get records
 $records = [];
 $query = $conn->query("SELECT idRecord, title FROM records WHERE idRecord NOT IN (SELECT idRecord FROM loans WHERE status = 'Open');");
 if ($query && $query->num_rows > 0) {
@@ -9,7 +10,8 @@ if ($query && $query->num_rows > 0) {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// create loan
+if (isset($_POST['record'])) {
     $recordId = $_POST['record'];
     $name = $_POST['name'];
     $email = $_POST['email'];

@@ -2,6 +2,8 @@
 
 include '../includes/db.php';
 
+
+// get loans
 $loans = [];
 $query = $conn->query("SELECT loans.idLoan, records.title, loans.name, loans.email, loans.date, loans.returnDate, loans.status FROM loans JOIN records ON loans.idRecord = records.idRecord ORDER BY loans.status ASC, loans.date DESC");
 if ($query && $query->num_rows > 0) {
@@ -10,7 +12,7 @@ if ($query && $query->num_rows > 0) {
     }
 }
 
-
+// return a record
 if (isset($_GET['return'])) {
     $id = $conn->real_escape_string($_GET['return']);
 
@@ -22,10 +24,17 @@ if (isset($_GET['return'])) {
     if ($loan['status'] != 'Returned') {
         $conn->query("UPDATE loans SET status = 'Returned', returnDate = NOW() WHERE idLoan = $id");
         header('Location: read.php');
+    } else{
+
     }
 }
 
-
+// delete a record
+if (isset($_GET['delete'])) {
+    $id = $conn->real_escape_string($_GET['delete']);
+    $conn->query("DELETE FROM loans WHERE idLoan = $id");
+    header('Location: read.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -61,15 +70,17 @@ if (isset($_GET['return'])) {
                     <td><?php echo $loan['status']; ?></td>
                     <td><?php echo $loan['date']; ?></td>
                     <td><?php echo $loan['returnDate']; ?></td>
-                    <td><a href="read.php?return=<?php echo $loan['idLoan']?>">Return</a></td>
                     <td><a href="edit.php?id=<?php echo $loan['idLoan']; ?>">Edit</a></td>
-                    <td><a href="index.php?type=loan&delete=<?php echo $loan['idLoan']; ?>">Delete</a></td>
+                    <td><a href="read.php?type=loan&delete=<?php echo $loan['idLoan']; ?>">Delete</a></td>
+                    <?php if ($loan['status'] != 'Returned') : ?>
+                        <td><a href="read.php?return=<?php echo $loan['idLoan']?>">Return</a></td>
+                    <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
     <br>
-
+                
     <a href="../index.php">Back</a>
 
 </body>
