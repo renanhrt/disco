@@ -34,46 +34,36 @@ if (isset($_POST['title'])) {
     $artistId = $_POST['artist'];
     $cover = $_FILES['cover'];
 
-    // check if record already exists
-    $checkQuery = $conn->prepare("SELECT * FROM records WHERE title = ? AND idArtist = ? AND year = ?");
-    $checkQuery->bind_param("sii", $title, $artistId, $year);
-    $checkQuery->execute();
-    $result = $checkQuery->get_result();
+    // upload cover image
+    if ($cover['error'] === UPLOAD_ERR_OK) {
+        $images = 'images/';
+        $uploadFile = $images . basename($cover['name']);
 
-    if ($result->num_rows > 0) {
-        $statusMessage = "Album already exists";
-    } else {
-        // upload cover image
-        if ($cover['error'] === UPLOAD_ERR_OK) {
-            $images = 'images/';
-            $uploadFile = $images . basename($cover['name']);
-    
-            $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
-            if ($extension != "jpg" && $extension != "png" && $extension != "jpeg") {
-                $statusMessage = "Only JPG, JPEG, PNG files are allowed.";
-            } else {
-                if (move_uploaded_file($cover['tmp_name'], "../" . $uploadFile)) {
-                    $verifier = true;
-                } else {
-                    $statusMessage = "Possible file upload attack!";
-                }
-            }
+        $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
+        if ($extension != "jpg" && $extension != "png" && $extension != "jpeg") {
+            $statusMessage = "Only JPG, JPEG, PNG files are allowed.";
         } else {
-            $statusMessage = "File upload error: " . $cover['error'];
-        }
-        
-        $query = $conn->prepare("UPDATE records SET title = ?, year = ?, idArtist = ?, cover = ? WHERE idRecord = ?");
-        $query->bind_param("sissi", $title, $year, $artistId, $uploadFile, $recordId);
-
-            if ($query->execute()) {
-                $statusMessage = "Record updated successfully";
-                header("Location: ../index.php");
+            if (move_uploaded_file($cover['tmp_name'], "../" . $uploadFile)) {
+                $verifier = true;
             } else {
-                $statusMessage = "Error: " . $query->error;
+                $statusMessage = "Possible file upload attack!";
             }
-
-        $query->close();
+        }
+    } else {
+        $statusMessage = "File upload error: " . $cover['error'];
     }
+    
+    $query = $conn->prepare("UPDATE records SET title = ?, year = ?, idArtist = ?, cover = ? WHERE idRecord = ?");
+    $query->bind_param("sissi", $title, $year, $artistId, $uploadFile, $recordId);
+
+        if ($query->execute()) {
+            $statusMessage = "Record updated successfully";
+            header("Location: ../index.php");
+        } else {
+            $statusMessage = "Error: " . $query->error;
+        }
+
+    $query->close();
 }
 
 ?>

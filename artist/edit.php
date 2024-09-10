@@ -33,6 +33,7 @@ if (isset($_POST['name'])) {
 
         if ($query->execute()) {
             $statusMessage = "Artist updated successfully";
+            header("Location: ../index.php");
         } else {
             $statusMessage = "Error: " . $query->error;
         }

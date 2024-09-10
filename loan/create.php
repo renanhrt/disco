@@ -62,5 +62,7 @@ if (isset($_POST['record'])) {
 
         <input type="submit" value="Submit">
     </form>
+
+    <a href="read.php">Back</a>
 </body>
 </html>

@@ -46,7 +46,7 @@ if (isset($_GET['delete'])) {
 </head>
 <body>
     
-    <h2>Loans</h2>
+    <h1>Loans</h1>
 
     <a href="create.php">Add Loan</a>
 

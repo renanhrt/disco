@@ -21,6 +21,7 @@ if (isset($_POST['name'])) {
 
         if ($insertQuery->execute()) {
             $statusMessage = "New artist created successfully";
+            header("Location: ../index.php");
         } else {
             $statusMessage = "Error: " . $insertQuery->error;
         }

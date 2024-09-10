@@ -70,7 +70,7 @@ if (isset($_GET['delete'])) {
             echo '<script>alert("Cannot delete loaned records");</script>';
         } else {
             $cover = $conn->query("SELECT cover FROM records WHERE idRecord = $id")->fetch_assoc()['cover'];
-            //unlink($cover);
+            unlink($cover);
             $conn->query("DELETE FROM records WHERE idRecord = $id");
             header('Location: index.php');
         }
@@ -87,10 +87,11 @@ if (isset($_GET['delete'])) {
     <title>Disco</title>
 </head>
 <body>
-    <h2>Records</h2>
+    <h1>Disco</h1>
 
     <h2><a href="loan/read.php">Loans</a></h2>
 
+    <h2>Records</h2>
     <!-- filter records -->
     <form action="" method=post>
         <select name="filter" id="filter">
@@ -111,7 +112,7 @@ if (isset($_GET['delete'])) {
             <option value="artist">Artist</option>
         </select></select>
         <input type="submit" value="Search">
-    </form>
+    </form><br>
 
     <!-- records list -->
     <a href="record/create.php">Add Record</a>
@@ -149,8 +150,7 @@ if (isset($_GET['delete'])) {
             </tr>
         </thead>
         <tbody>
-            <?php
-            foreach ($artists as $artist) : ?>
+            <?php foreach ($artists as $artist) : ?>
                 <tr>
                     <td><?php echo $artist['name']; ?></td>
                     <td><?php echo $artist['record_count']; ?></td>
