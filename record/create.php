@@ -60,19 +60,20 @@ if (isset($_POST['title'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Artists</title>
+    <link rel="stylesheet" href="../style.css">
+    <title>Create Records</title>
 </head>
 <body>
-    <h2>Create Artist</h2>
+    <h2>Create a Record</h2>
     <form method="POST" action="" enctype="multipart/form-data">
         <label for="title">Title:</label><br>
-        <input type="text" id="title" name="title" required><br><br>
+        <input type="text" id="title" class="textinput" name="title" required><br><br>
 
         <label for="year">Year:</label><br>
-        <input type="number" id="year" name="year" required><br><br>
+        <input type="number" id="year" class="textinput" name="year" required><br><br>
 
         <label for="artist">Artist:</label><br>
-        <select id="artist" name="artist" required>
+        <select id="artist" class="selection" name="artist" required>
             <option value="">Select an artist</option>
             <?php foreach ($artists as $artist): ?>
                 <option value="<?php echo $artist['idArtist']; ?>">
@@ -82,13 +83,13 @@ if (isset($_POST['title'])) {
         </select><br><br>
 
         <label for="cover">Cover:</label><br>
-        <input type="file" id="cover" name="cover" required><br><br>
+        <input type="file" class="submit" name="cover" required><br><br>
 
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" class="submit">
     </form>
 
     <p><?php echo htmlspecialchars($statusMessage); ?></p>
 
-    <a href="../index.php">Back</a>
+    <a href="../index.php" class="back">Back</a>
 </body>
 </html>

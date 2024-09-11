@@ -35,6 +35,7 @@ if (isset($_POST['record'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <title>Create a loan</title>
 </head>
 <body>
@@ -42,7 +43,7 @@ if (isset($_POST['record'])) {
     <form action="" method="post">
         
         <label for="record">Record:</label><br>
-        <select id="record" name="record" required>
+        <select class="selection" id="record" name="record" required>
             <option value="">Select a record</option>
             <?php foreach ($records as $record): ?>
                 <option value="<?php echo $record['idRecord']; ?>">
@@ -52,17 +53,17 @@ if (isset($_POST['record'])) {
         </select><br><br>
 
         <label for="Name">Name:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
+        <input type="text" class="textinput" id="name" name="name" required><br><br>
  
         <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+        <input type="email" class="textinput" id="email" name="email" required><br><br>
         
         <label for="date">Loaned on:</label><br>
-        <input type="date" id="date" name="date" required><br><br>
+        <input type="date" class="selection" id="date" name="date" required><br><br>
 
-        <input type="submit" value="Submit">
+        <input type="submit" class="submit" value="Submit">
     </form>
 
-    <a href="read.php">Back</a>
+    <a href="read.php" class="back">Back</a>
 </body>
 </html>

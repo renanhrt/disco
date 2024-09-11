@@ -16,8 +16,6 @@ if (isset($_GET['id'])) {
     $record = $result->fetch_assoc();
 }
 
-print_r($record);
-
 // get artists
 $artists = [];
 $query = $conn->query("SELECT idArtist, name FROM artists");
@@ -35,24 +33,30 @@ if (isset($_POST['title'])) {
     $cover = $_FILES['cover'];
 
     // upload cover image
-    if ($cover['error'] === UPLOAD_ERR_OK) {
-        $images = 'images/';
-        $uploadFile = $images . basename($cover['name']);
+    if (isset($cover) && $cover['size'] > 0) {
+        if ($cover['error'] === UPLOAD_ERR_OK) {
+            $images = 'images/';
+            $uploadFile = $images . basename($cover['name']);
 
-        $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
-        if ($extension != "jpg" && $extension != "png" && $extension != "jpeg") {
-            $statusMessage = "Only JPG, JPEG, PNG files are allowed.";
-        } else {
-            if (move_uploaded_file($cover['tmp_name'], "../" . $uploadFile)) {
-                $verifier = true;
+            $extension = strtolower(pathinfo($cover['name'], PATHINFO_EXTENSION));
+            if ($extension != "jpg" && $extension != "png" && $extension != "jpeg") {
+                $statusMessage = "Only JPG, JPEG, PNG files are allowed.";
             } else {
-                $statusMessage = "Possible file upload attack!";
+                if (move_uploaded_file($cover['tmp_name'], "../" . $uploadFile)) {
+                    $verifier = true;
+                    unlink("../".$record['cover']);
+                } else {
+                    $statusMessage = "Possible file upload attack!";
+                }
             }
+        } else {
+            $statusMessage = "File upload error: " . $cover['error'];
         }
     } else {
-        $statusMessage = "File upload error: " . $cover['error'];
+        $uploadFile = $record['cover'];
+        $verifier = true;
     }
-    
+
     $query = $conn->prepare("UPDATE records SET title = ?, year = ?, idArtist = ?, cover = ? WHERE idRecord = ?");
     $query->bind_param("sissi", $title, $year, $artistId, $uploadFile, $recordId);
 
@@ -73,19 +77,20 @@ if (isset($_POST['title'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <title>Edit Record</title>
 </head>
 <body>
     <h2>Edit Record</h2>
     <form method="POST" action="" enctype="multipart/form-data">
         <label for="title">Title:</label><br>
-        <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($record['title']); ?>" required><br><br>
+        <input type="text" id="title" name="title" class="textinput" value="<?php echo htmlspecialchars($record['title']); ?>" required><br><br>
 
         <label for="year">Year:</label><br>
-        <input type="number" id="year" name="year" value="<?php echo htmlspecialchars($record['year']); ?>" required><br><br>
+        <input type="number" id="year" name="year" class="textinput" value="<?php echo htmlspecialchars($record['year']); ?>" required><br><br>
 
         <label for="artist">Artist:</label><br>
-        <select id="artist" name="artist" required>
+        <select id="artist" class="selection" name="artist" required>
             <option value="">Select an artist</option>
             <?php foreach ($artists as $artist): ?>
                 <option value="<?php echo $artist['idArtist']; ?>" <?php echo $artist['idArtist'] == $record['idArtist'] ? 'selected' : ''; ?>>
@@ -95,12 +100,14 @@ if (isset($_POST['title'])) {
         </select><br><br>
 
         <label for="cover">Cover:</label><br>
-        <input type="file" id="cover" name="cover"><br><br>
+        <input class="submit" type="file" id="cover" name="cover"><br><br>
         <img src="<?php echo "../".$record['cover']; ?>" alt="Current Cover" style="max-width: 150px;"><br><br>
 
-        <input type="submit" value="Update">
+        <input class="submit" type="submit" value="Update">
     </form>
 
     <p><?php echo htmlspecialchars($statusMessage); ?></p>
+
+    <a href="../index.php" class="back">Back</a>
 </body>
 </html>

@@ -81,6 +81,7 @@ if (isset($_POST['record'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <title>Edit a Loan</title>
 </head>
 <body>
@@ -89,7 +90,7 @@ if (isset($_POST['record'])) {
     
     <form action="" method="post">
         <label for="record">Record:</label>
-        <select id="record" name="record" required>
+        <select class="selection" id="record" name="record" required>
             <option value="">Select a record</option>
             <?php foreach ($records as $record): ?>
             <option value="<?php echo $record['idRecord']; ?>" <?php if ($record['idRecord'] == $loan['idRecord']) echo 'selected'; ?>>
@@ -101,23 +102,23 @@ if (isset($_POST['record'])) {
         <input type="hidden" name="id" value="<?php echo $loan['idLoan']; ?>">
         
         <label for="name">Name</label>
-        <input type="text" name="name" id="name" value="<?php echo $loan['name']; ?>"><br><br>
+        <input type="text" class="textinput" name="name" id="name" value="<?php echo $loan['name']; ?>"><br><br>
 
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" value="<?php echo $loan['email']; ?>"><br><br>
+        <input type="email" name="email" class="textinput" id="email" value="<?php echo $loan['email']; ?>"><br><br>
 
         <label for="date">Loaned on:</label>
-        <input type="date" id="date" name="date" value="<?php echo $loan['date']; ?>" required><br><br>
+        <input type="date" id="date" class="selection name="date" value="<?php echo $loan['date']; ?>" required><br><br>
         
         <?php if ($loan['status'] == 'Returned') : ?>
             <label for="returnDate">Returned on:</label>
-            <input type="date" id="returnDate" name="returnDate" value="<?php echo $loan['returnDate']; ?>" required><br><br>
+            <input type="date" id="returnDate" class="selection name="returnDate" value="<?php echo $loan['returnDate']; ?>" required><br><br>
         <?php else: ?>
             <input type="hidden" name="returnDate" value="<?php echo $loan['returnDate']; ?>">
         <?php endif; ?>
         
 
-        <button type="submit">Update</button>
+        <button type="submit" class="submit">Update</button>
     </form>
     
     <!-- reopen loan button -->
@@ -125,13 +126,13 @@ if (isset($_POST['record'])) {
         <form action="" method="post">
             <input type="hidden" name="type" value="reopen">
             <input type="hidden" name="id" value="<?php echo $loan['idLoan']; ?>">
-            <button type="submit">Reopen Loan</button>
+            <button type="submit" class="submit">Reopen Loan</button>
         </form>
     <?php endif; ?>
 
     <p><?php echo htmlspecialchars($statusMessage); ?></p>
 
-    <a href="read.php">Back</a>
+    <a href="read.php" class="back">Back</a>
 
 </body>
 </html>

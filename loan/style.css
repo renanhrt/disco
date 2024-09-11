@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-family: "Inter", sans-serif;
+}
+h1{
+    font-family: 'Inter', sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    color: #333333;
+    margin: 20px;
+}
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd; 
+}
+
+th {
+    background-color: #555485; 
+    color: white; 
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #d1e7dd; 
+}
+
+td:first-child {
+    font-weight: bold;
+}
+
+table {
+    box-shadow: 0 4px 8px #cfcfcf;
+}
+
+.back{
+    display: inline-block;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #af4c4c; 
+    color: white; 
+    font-size: 16px;
+    border-radius: 5px; 
+    border: 1px solid #af4c4c;
+}
+
+.button {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.return-btn {
+    background-color: #008CBA;
+    color: white;
+    border: 1px solid #008CBA;
+}
+.delete-btn {
+    background-color: #853e39;
+    color: white;
+    border: 1px solid #853e39;
+}
+.edit-btn {
+    background-color: #206122; 
+    color: white;   
+    border: 1px solid #206122;
+}
+
+.create{
+    background-color: #368649;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+    border: 1px solid #28a745;
+    cursor: pointer;
+}

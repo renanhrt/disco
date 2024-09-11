@@ -1,0 +1,186 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Inter", sans-serif;
+}
+
+
+h1{
+    font-family: 'Inter', sans-serif;
+    font-size: 42px;
+    font-weight: bold;
+    color: #333333;
+    margin: 20px;
+}
+
+
+
+table{
+    width: 80%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+th, td{
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd; 
+}
+
+th{
+    background-color: #555485; 
+    color: white; 
+    font-weight: bold;
+}
+.filter{
+    background: none;
+    border: none; 
+    padding: 0; 
+    margin: 0; 
+    font: inherit; 
+    cursor: pointer; 
+    text-align: left; 
+    color: inherit;
+    outline: none; 
+}
+
+tr:hover{
+    background-color: #d1e7dd; 
+}
+
+td:first-child{
+    font-weight: bold;
+}
+
+table{
+    box-shadow: 0 4px 8px #cfcfcf;
+}
+
+
+
+.back{
+    display: inline-block;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #af4c4c; 
+    color: white; 
+    font-size: 16px;
+    border-radius: 5px; 
+    border: 1px solid #af4c4c;
+}
+
+.create{
+    background-color: #368649;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+    border: 1px solid #28a745;
+    cursor: pointer;
+}
+
+
+.searchf{
+    display: flex;
+    gap: 5px;
+}
+.selection{
+    width: 100px;
+    height: 42px;
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #474747;
+    border-radius: 5px;
+}
+.textinput{
+    width: 200px;
+    height: 42px;
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #474747;
+    border-radius: 5px;
+}
+.submit{
+    display: inline-block;
+    padding: 5px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #474747;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    box-shadow: 4px 4px 4px #999;
+    border-radius: 5px;    
+    width: 80px;
+}
+
+
+
+.button {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.delete-btn {
+    background-color: #853e39;
+    color: white;
+    border: 1px solid #853e39;
+}
+.edit-btn {
+    background-color: #206122; 
+    color: white;   
+    border: 1px solid #206122;
+}
+
+
+.records, .artists{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.records-h{
+    display: flex;
+    justify-content: space-between;
+    width: 80%; 
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.tables{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+}
+
+.loan{
+    display: inline-block;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #555485; 
+    color: rgb(255, 255, 255); 
+    font-size: 24px;
+    border-radius: 5px; 
+    border: 1px solid #555485;
+}
+

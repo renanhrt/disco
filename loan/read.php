@@ -5,7 +5,7 @@ include '../includes/db.php';
 
 // get loans
 $loans = [];
-$query = $conn->query("SELECT loans.idLoan, records.title, loans.name, loans.email, loans.date, loans.returnDate, loans.status FROM loans JOIN records ON loans.idRecord = records.idRecord ORDER BY loans.status ASC, loans.date DESC");
+$query = $conn->query("SELECT loans.idLoan, records.title, loans.name, loans.email, loans.date, loans.returnDate, loans.status FROM loans JOIN records ON loans.idRecord = records.idRecord ORDER BY loans.status ASC, loans.date DESC, loans.returnDate DESC");
 if ($query && $query->num_rows > 0) {
     while ($row = $query->fetch_assoc()) {
         $loans[] = $row;
@@ -42,13 +42,14 @@ if (isset($_GET['delete'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Loans</title>
 </head>
 <body>
     
     <h1>Loans</h1>
 
-    <a href="create.php">Add Loan</a>
+    <a href="create.php" class="create">Add Loan</a>
 
     <table>
         <thead>
@@ -59,6 +60,7 @@ if (isset($_GET['delete'])) {
                 <th>Status</th>
                 <th>Loaned On</th>
                 <th>Returned On</th>
+                <th colspan="3">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -70,10 +72,10 @@ if (isset($_GET['delete'])) {
                     <td><?php echo $loan['status']; ?></td>
                     <td><?php echo $loan['date']; ?></td>
                     <td><?php echo $loan['returnDate']; ?></td>
-                    <td><a href="edit.php?id=<?php echo $loan['idLoan']; ?>">Edit</a></td>
-                    <td><a href="read.php?type=loan&delete=<?php echo $loan['idLoan']; ?>">Delete</a></td>
+                    <td><a href="edit.php?id=<?php echo $loan['idLoan']; ?>" class="button edit-btn">Edit</a></td>
+                    <td><a href="read.php?type=loan&delete=<?php echo $loan['idLoan']; ?>" class="button delete-btn">Delete</a></td>
                     <?php if ($loan['status'] != 'Returned') : ?>
-                        <td><a href="read.php?return=<?php echo $loan['idLoan']?>">Return</a></td>
+                        <td><a href="read.php?return=<?php echo $loan['idLoan']?>" class="button return-btn">Return</a></td>
                     <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
@@ -81,7 +83,7 @@ if (isset($_GET['delete'])) {
     </table>
     <br>
                 
-    <a href="../index.php">Back</a>
+    <a href="../index.php" class="back">Back</a>
 
 </body>
 </html>
